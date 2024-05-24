@@ -1,0 +1,29 @@
+{
+    "listeners": {
+        "*:8080": {
+            "pass": "routes"
+        }
+    },
+
+    "routes": [
+        {
+            "match": {
+                "uri": "!/index.php"
+            },
+            "action": {
+                "share":  "/var/www/html/web$uri",
+                "fallback": {
+                    "pass": "applications/yii2"
+                }
+            }
+        }
+    ],
+
+    "applications": {
+        "yii2": {
+            "type": "php",
+            "root":  "/var/www/html/web",
+            "script": "index.php"
+        }
+    }
+}

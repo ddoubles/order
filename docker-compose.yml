@@ -1,0 +1,58 @@
+version: '3'
+services:
+  backend:
+    container_name: 'backend'
+    build:
+      context: ./docker/backend
+      dockerfile: Dockerfile
+      args:
+        user: web
+        uid: 1000
+    volumes:
+      - '.:/var/www/html'
+    ports:
+      - '8181:8080'
+#    extra_hosts:
+#      - 'host.docker.internal:host-gateway'
+    depends_on:
+      - pgsql
+      - redis
+  pgsql:
+    image: 'postgres:15@sha256:4bfec3e5a8c47c76f184e6a875029a78eb1f359eb9956c250e2182c3ab5c93e3'
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: '${DB_DATABASE}'
+      POSTGRES_USER: '${DB_USERNAME}'
+      POSTGRES_PASSWORD: '${DB_PASSWORD}'
+    volumes:
+      - 'pgsql:/var/lib/postgresql/data'
+    healthcheck:
+      test:
+        - CMD
+        - pg_isready
+        - '-q'
+        - '-d'
+        - '${DB_DATABASE}'
+        - '-U'
+        - '${DB_USERNAME}'
+      retries: 3
+      timeout: 5s
+  redis:
+    image: 'redis@sha256:9e32ff5c286464387ff8f3fe72fc150a095c80f67af69d31ce4cb4d80fad0d7a'
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'redis:/data'
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - ping
+      retries: 3
+      timeout: 5s
+volumes:
+  pgsql:
+    driver: local
+  redis:
+    driver: local

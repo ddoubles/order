@@ -2,7 +2,9 @@
 
 namespace app\controllers\api;
 
+use app\models\Order;
 use app\services\order\OrderCreatorService;
+use Exception;
 use Yii;
 use yii\rest\Controller;
 use yii\web\Response;
@@ -18,25 +20,25 @@ class OrdersController extends Controller
         return $behaviors;
     }
 
-    protected function verbs()
+    protected function verbs(): array
     {
         return ['create' => ['POST']];
     }
 
     /**
      * Создание заказа на основании контрагента, даты заказа, и списка товаров.
-     * @return void
+     * @return Order
+     * @throws Exception
      */
-    public function actionCreate()
+    public function actionCreate(): Order
     {
         $orderCreatorService = Yii::$container->get(OrderCreatorService::class);
         $request = Yii::$app->request;
-        $prices = $orderCreatorService->create(
+        return $orderCreatorService->create(
             $request->post('counterpartyId'),
             $request->post('orderDate'),
-            $request->post('productsIds'))
-        ;
-        $this->asJson($prices);
+            $request->post('productsIds')
+        );
     }
 
 }

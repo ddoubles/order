@@ -25,10 +25,10 @@ final readonly class OrderCreatorService
      * @param int $counterpartyId
      * @param string $orderDate
      * @param array $products Массив вида: [['id' => 1, 'quantity' => 4],...]
-     * @return array
+     * @return Order
      * @throws Exception
      */
-    public function create(int $counterpartyId, string $orderDate, array $products): array
+    public function create(int $counterpartyId, string $orderDate, array $products): Order
     {
         $prices = $this->findProductsPrices($counterpartyId, $orderDate, $products);
         $transaction = Yii::$app->db->beginTransaction();
@@ -65,7 +65,7 @@ final readonly class OrderCreatorService
         }
         $transaction->commit();
 
-        return $prices;
+        return $this->order;
     }
 
     /**

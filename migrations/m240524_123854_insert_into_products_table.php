@@ -15,7 +15,8 @@ class m240524_123854_insert_into_products_table extends Migration
         $this->batchInsert('products', ['product_name'], [
             ['Car'],
             ['Balloon'],
-            ['Gears']
+            ['Gears'],
+            ['Wheels'],
         ]);
 
     }

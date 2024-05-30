@@ -37,6 +37,6 @@ class m240523_203317_create_order_product_table extends Migration
         $this->dropForeignKey($this->tableName . '_order_id_fkey', $this->tableName);
         $this->dropForeignKey($this->tableName . '_product_id_fkey', $this->tableName);
         $this->dropIndex('order_product_order_id_product_id_idx', $this->tableName);
-        $this->dropTable('{{%order_product}}');
+        $this->dropTable($this->tableName);
     }
 }

@@ -13,9 +13,9 @@ class m240524_123910_insert_into_counterparties_table extends Migration
     public function safeUp()
     {
         $this->batchInsert('counterparties', ['counterparty_name'], [
-            ['Creative Cultures'],
-            ['Mega electronics'],
-            ['Omega Corp'],
+            ['Хорошая компания'],
+            ['Отличная компания'],
+            ['Нормальная компания'],
         ]);
 
     }

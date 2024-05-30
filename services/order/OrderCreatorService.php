@@ -9,6 +9,7 @@ use app\models\PriceType;
 use app\models\RetailPrice;
 use Yii;
 use yii\db\Exception;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 final readonly class OrderCreatorService
@@ -106,22 +107,34 @@ final readonly class OrderCreatorService
 
     private function findCounterpartyPrices(int $counterpartyId, string $priceDate, array $productsIds): array
     {
-        return $this->counterpartyPrice->find()
+        $rankedQuery = (new Query())
+            ->select('*, ROW_NUMBER() over (partition by product_id order by price_date desc) as date_rank')
+            ->from($this->counterpartyPrice::tableName())
             ->where([
-                'counterparty_id' => $counterpartyId,
                 'product_id' => $productsIds,
-                'price_date' => $priceDate,
+                'counterparty_id' => $counterpartyId,
             ])
+            ->andWhere(['<=', 'price_date', $priceDate]);
+        return $this->counterpartyPrice->find()
+            ->withQuery($rankedQuery, 'ranked_prices')
+            ->from('ranked_prices')
+            ->where(['date_rank' => 1])
             ->all();
     }
 
     private function findRetailPrices(string $priceDate, array $productsIds): array
     {
-        return $this->retailPrice->find()
+        $rankedQuery = (new Query())
+            ->select('*, ROW_NUMBER() over (partition by product_id order by price_date desc) as date_rank')
+            ->from($this->retailPrice::tableName())
             ->where([
                 'product_id' => $productsIds,
-                'price_date' => $priceDate,
             ])
+            ->andWhere(['<=', 'price_date', $priceDate]);
+        return $this->retailPrice->find()
+            ->withQuery($rankedQuery, 'ranked_prices')
+            ->from('ranked_prices')
+            ->where(['date_rank' => 1])
             ->all();
     }
 

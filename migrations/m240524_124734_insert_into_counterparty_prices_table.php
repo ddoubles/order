@@ -29,7 +29,5 @@ class m240524_124734_insert_into_counterparty_prices_table extends Migration
     public function safeDown()
     {
         echo "m240524_124734_insert_into_counterparties_prices_table cannot be reverted.\n";
-
-        return false;
     }
 }

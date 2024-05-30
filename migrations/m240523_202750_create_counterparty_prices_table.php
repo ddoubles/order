@@ -24,7 +24,7 @@ class m240523_202750_create_counterparty_prices_table extends Migration
         $this->createIndex(
             'counterparty_prices_productid_pricedate_counterpatryid_idx',
             $this->tableName,
-            ['product_id', 'price_date', 'counterparty_id']
+            ['product_id', 'counterparty_id', 'price_date']
         );
 
         $this->addForeignKey($this->tableName . '_product_id_fkey', $this->tableName, 'product_id', 'products', 'id');
@@ -39,6 +39,6 @@ class m240523_202750_create_counterparty_prices_table extends Migration
         $this->dropForeignKey($this->tableName . '_counterparty_id_fkey', $this->tableName);
         $this->dropForeignKey($this->tableName . '_product_id_fkey', $this->tableName);
         $this->dropIndex('counterparty_prices_productid_pricedate_counterpatryid_idx', $this->tableName);
-        $this->dropTable('{{%counterparty_prices}}');
+        $this->dropTable($this->tableName);
     }
 }

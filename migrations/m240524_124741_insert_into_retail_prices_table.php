@@ -29,7 +29,5 @@ class m240524_124741_insert_into_retail_prices_table extends Migration
     public function safeDown()
     {
         echo "m240524_124741_insert_into_retail_prices_table cannot be reverted.\n";
-
-        return false;
     }
 }

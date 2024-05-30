@@ -25,8 +25,10 @@ class m240524_123910_insert_into_counterparties_table extends Migration
      */
     public function safeDown()
     {
-        echo "m240524_123910_insert_into_counterparties_table cannot be reverted.\n";
-
-        return false;
+        $this->delete('counterparties', ['counterparty_name' => [
+            'Хорошая компания',
+            'Отличная компания',
+            'Нормальная компания',
+        ]]);
     }
 }
